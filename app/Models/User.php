@@ -23,4 +23,14 @@ class User extends Authenticatable
         'password',
         'username'
     ];
+    
+    public function tasks()
+    {
+        return $this->hasMany('App\Models\Task');
+    }
+
+    public function getImage()
+    {
+        return $this->morphOne('App\Models\Image','imageable');
+    }
 }

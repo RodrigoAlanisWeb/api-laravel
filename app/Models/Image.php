@@ -14,4 +14,9 @@ class Image extends Model
         'imageable_type',
         'url'
     ];
+
+    public function imageable()
+    {
+        return $this->morphTo();
+    }
 }
