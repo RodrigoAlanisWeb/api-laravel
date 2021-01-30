@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Passport;
 
 class AuthController extends Controller
@@ -25,11 +27,19 @@ class AuthController extends Controller
     {
         $attr = $this->validateSingup($request);
 
-        User::create([
+        $user = User::create([
             'name' => $attr['name'],
             'username' => $attr['username'],
             'email' => $attr['email'],
             'password' => Hash::make($attr['password'])
+        ]);
+
+        $url = $request->file('image')->store('public');
+
+        Image::create([
+            'imageable_type'=>'App\Models\User',
+            'imageable_id' => $user->id,
+            'url' => $url,
         ]);
 
         Auth::attempt(['email' => $attr['email'], 'password' => $attr['password']]);
@@ -42,7 +52,15 @@ class AuthController extends Controller
 
     public function profile()
     {
-        return response()->json(['success'=>true,'user'=>Auth::user()]);
+        $user = Auth::user();
+        return response()->json(['success'=>true,'user'=>$user]);
+    }
+
+    public function getImage()
+    {
+        $user = Auth::user();
+        $url = Storage::url($user->image->url);
+        return "<img src='http://127.0.0.1:8003$url'>";
     }
 
     public function logout()

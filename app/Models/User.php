@@ -29,7 +29,7 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Task');
     }
 
-    public function getImage()
+    public function image()
     {
         return $this->morphOne('App\Models\Image','imageable');
     }

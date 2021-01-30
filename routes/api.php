@@ -33,4 +33,5 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::delete('task/{task}', [TaskController::class, 'delete']);
     Route::put('task/{task}', [TaskController::class, 'edit']);
     Route::get('task/{task}/done', [TaskController::class, 'done']);
+    route::get('user/image', [AuthController::class, 'getImage']);
 });
